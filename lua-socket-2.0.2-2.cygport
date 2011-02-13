@@ -1,16 +1,19 @@
+ORIG_PN="luasocket"
 inherit lua
 
 DESCRIPTION="Lua TCP/UDP socket library"
 HOMEPAGE="http://www.tecgraf.puc-rio.br/~diego/professional/luasocket/"
-SRC_URI="http://luaforge.net/frs/download.php/2664/${PN/-}-${PV}.tar.gz"
-SRC_DIR="${PN/-}-${PV}"
+SRC_URI="http://luaforge.net/frs/download.php/2664/${ORIG_PN}-${PV}.tar.gz"
+
+PATCH_URI="
+	mirror://portage/dev-lua/${ORIG_PN}/files/${ORIG_PN}-2.0.2-unixsocket.patch
+	2.0.2-liblua.patch
+"
 
 src_compile() {
 	lndirs
 	cd ${B}
-	cygmake EXT=dll LUAINC=${LUA_CFLAGS} LIBS=${LUA_LIBS}
-	cd ${B}/src
-	cygmake unix.dll EXT=dll LUAINC=${LUA_CFLAGS} LIBS=${LUA_LIBS}
+	cygmake EXT=dll LIBS=${LUA_LIBS}
 }
 
 src_install() {
@@ -18,7 +21,5 @@ src_install() {
 	cyginstall EXT=dll \
 		INSTALL_TOP_LIB=${D}${LUA_LIBDIR} \
 		INSTALL_TOP_SHARE=${D}${LUA_SCRIPTDIR}
-
-	exeinto ${LUA_LIBDIR}/socket
-	doexe src/unix.dll
 }
+HTMLDOCS="doc/*"
