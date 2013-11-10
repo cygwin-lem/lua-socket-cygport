@@ -1,0 +1,32 @@
+inherit lua
+
+NAME="lua-socket"
+VERSION=2.0.2
+RELEASE=2
+CATEGORY="Lua"
+SUMMARY="Lua TCP/UDP socket library"
+DESCRIPTION="LuaSocket is a Lua extension library that is composed by two parts:
+a C core that provides support for the TCP and UDP transport layers, and a set
+of Lua modules that add support for functionality commonly needed by applications
+that deal with the Internet."
+HOMEPAGE="http://w3.impa.br/~diego/software/luasocket/"
+SRC_URI="http://files.luaforge.net/releases/luasocket/luasocket/luasocket-${VERSION}/luasocket-${VERSION}.tar.gz"
+SRC_DIR="luasocket-${VERSION}"
+PATCH_URI="
+	mirror://portage/dev-lua/luasocket/files/luasocket-2.0.2-unixsocket.patch
+	2.0.2-liblua.patch
+"
+
+src_compile() {
+	lndirs
+	cd ${B}
+	cygmake EXT=dll CFLAGS="${CFLAGS} -DLUASOCKET_DEBUG" LIBS=${LUA_LIBS}
+}
+
+src_install() {
+	cd ${B}
+	cyginstall EXT=dll \
+		INSTALL_TOP_LIB=${D}${LUA_LIBDIR} \
+		INSTALL_TOP_SHARE=${D}${LUA_SCRIPTDIR}
+}
+HTMLDOCS="doc/*"
