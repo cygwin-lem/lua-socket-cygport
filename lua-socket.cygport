@@ -1,8 +1,8 @@
 inherit lua
 
 NAME="lua-socket"
-VERSION=2.0.2
-RELEASE=2
+VERSION=3.0
+RELEASE=0.1.rc1
 CATEGORY="Lua"
 SUMMARY="Lua TCP/UDP socket library"
 DESCRIPTION="LuaSocket is a Lua extension library that is composed by two parts:
@@ -10,23 +10,30 @@ a C core that provides support for the TCP and UDP transport layers, and a set
 of Lua modules that add support for functionality commonly needed by applications
 that deal with the Internet."
 HOMEPAGE="http://w3.impa.br/~diego/software/luasocket/"
-SRC_URI="http://files.luaforge.net/releases/luasocket/luasocket/luasocket-${VERSION}/luasocket-${VERSION}.tar.gz"
-SRC_DIR="luasocket-${VERSION}"
+#SRC_URI="http://files.luaforge.net/releases/luasocket/luasocket/luasocket-${VERSION}/luasocket-${VERSION}.tar.gz"
+src_v=${VERSION}-${RELEASE##*\.}
+SRC_URI="https://github.com/diegonehab/luasocket/archive/v${src_v}/luasocket-v${src_v}.tar.gz"
+SRC_DIR="luasocket-${src_v}"
 PATCH_URI="
-	mirror://portage/dev-lua/luasocket/files/luasocket-2.0.2-unixsocket.patch
-	2.0.2-liblua.patch
+	http://pkgs.fedoraproject.org/cgit/lua-socket.git/plain/luasocket-optflags.patch
+	http://pkgs.fedoraproject.org/cgit/lua-socket.git/plain/luasocket-no-global-vars.patch
+	http://pkgs.fedoraproject.org/cgit/lua-socket.git/plain/luasocket-3.0-settimeout.patch
 "
 
 src_compile() {
 	lndirs
 	cd ${B}
-	cygmake EXT=dll CFLAGS="${CFLAGS} -DLUASOCKET_DEBUG" LIBS=${LUA_LIBS}
+	cygmake all-unix \
+		SO=dll \
+		CC=${CC} LD=${CC} \
+		LDFLAGS="-shared -llua -o" \
+		OPTFLAGS="${CFLAGS}"
 }
 
 src_install() {
 	cd ${B}
-	cyginstall EXT=dll \
-		INSTALL_TOP_LIB=${D}${LUA_LIBDIR} \
-		INSTALL_TOP_SHARE=${D}${LUA_SCRIPTDIR}
+	cygmake install-unix DESTDIR=${D} SO=dll \
+		INSTALL_TOP_CDIR=${D}${LUA_LIBDIR} \
+		INSTALL_TOP_LDIR=${D}${LUA_SCRIPTDIR}
 }
 HTMLDOCS="doc/*"
