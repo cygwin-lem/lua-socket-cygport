@@ -2,7 +2,7 @@ inherit lua
 
 NAME="lua-socket"
 VERSION=3.0
-RELEASE=0.1.rc1
+RELEASE=0.2.rc1
 CATEGORY="Lua"
 SUMMARY="Lua TCP/UDP socket library"
 DESCRIPTION="LuaSocket is a Lua extension library that is composed by two parts:
@@ -15,16 +15,16 @@ src_v=${VERSION}-${RELEASE##*\.}
 SRC_URI="https://github.com/diegonehab/luasocket/archive/v${src_v}/luasocket-v${src_v}.tar.gz"
 SRC_DIR="luasocket-${src_v}"
 PATCH_URI="
-	http://pkgs.fedoraproject.org/cgit/lua-socket.git/plain/luasocket-optflags.patch
-	http://pkgs.fedoraproject.org/cgit/lua-socket.git/plain/luasocket-no-global-vars.patch
-	http://pkgs.fedoraproject.org/cgit/lua-socket.git/plain/luasocket-3.0-settimeout.patch
+	https://src.fedoraproject.org/rpms/lua-socket.git/raw/master/f/luasocket-optflags.patch
+	https://src.fedoraproject.org/rpms/lua-socket.git/raw/master/f/luasocket-no-global-vars.patch
+	https://src.fedoraproject.org/rpms/lua-socket.git/raw/master/f/luasocket-3.0-settimeout.patch
 "
 
 src_compile() {
 	lndirs
 	cd ${B}
-	cygmake all-unix \
-		SO=dll \
+	cygmake linux \
+		SO=dll LUAV=${LUA_VERSION} \
 		CC=${CC} LD=${CC} \
 		LDFLAGS="-shared -llua -o" \
 		OPTFLAGS="${CFLAGS}"
