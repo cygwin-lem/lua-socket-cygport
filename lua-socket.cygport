@@ -77,6 +77,13 @@ set_packages_lua() {
   "
   __set_pkg_property . REQUIRES "lua${LUA_VERSION_CYG}"
   __set_pkg_property . REQUIRES_SUPPRESS "${COMMON_REQUIRES_SUPPRESS}"
+  case ${LUA_VERSION} in
+  5.3)
+    __set_pkg_property . OBSOLETES "\
+      lua-${LUA_PKG_NAME} \
+    "
+    ;;
+  esac
 }
 
 set_packages() {
