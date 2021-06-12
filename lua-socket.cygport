@@ -1,6 +1,6 @@
 NAME="lua-socket"
 VERSION=3.0
-RELEASE=0.2.rc1
+RELEASE=0.10.rc1
 CATEGORY="Lua"
 SUMMARY="Lua TCP/UDP socket library"
 DESCRIPTION="\
