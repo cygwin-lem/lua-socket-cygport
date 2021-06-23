@@ -1,5 +1,5 @@
 category: Lua
-requires: cygwin lua51 lua54-socket lua51
+requires: cygwin lua51
 sdesc: "Lua TCP/UDP socket library"
 ldesc: "LuaSocket is a Lua extension library that is composed by two parts:
 a C core that provides support for the TCP and UDP transport layers, and
